@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Illuminate\Http\Request;
+// use App\Http\Requests\MoviesRequest;
 use App\Movie;
 class MoviesController extends Controller
 {
@@ -34,26 +35,24 @@ class MoviesController extends Controller
      */
     public function store(Request $request)
     {  
+        $this->validate($request, [
+            'title' => 'required|unique:movies',
+            'director' => 'required',
+            'duration' => 'required|numeric|digits_between:1,500',
+            'releaseDate' => 'required|unique:movies',
+            'imageUrl' => 'URL'
+        ]);
 
-        // $request->validate([
-        //     'title' => 'required|string|max:50',
-        //     'director' => 'required|string',
-        //     'imageUrl' => 'required|string',
-        //     'duration'=>'required|integer|min:1',
-        //     'releaseDate' => 'required',
-        //     'genre' => 'required|string'
+        $movie = new Movie();
+        $movie->title = $request->input('title');
+        $movie->director = $request->input('director');
+        $movie->imageUrl = $request->input('imageUrl');
+        $movie->duration = $request->input('duration');
+        $movie->releaseDate = $request->input('releaseDate');
+        $movie->genre = $request->input('genre');
 
-        // ]);
-        
-        $movie=new Movie();
-        
-        $movie->title=$request->input('title');
-        $movie->director=$request->input('director');
-        $movie->imageUrl=$request->input('imageUrl');
-        $movie->duration=$request->input('duration');
-        $movie->releaseDate=$request->input('releaseDate');
-        $movie->genre=$request->input('genre');
         $movie->save();
+
         return $movie;
     }
 
@@ -88,15 +87,17 @@ class MoviesController extends Controller
      */
     public function update(Request $request, $id)
     {
-       $movie=Movie::find($id);
-       $movie->title=$request->input('title');
-       $movie->director=$request->input('director');
-       $movie->imageUrl=$request->input('imageUrl');
-       $movie->duration=$request->input('duration');
-       $movie->releaseDate=$request->input('releaseDate');
-       $movie->genre=$request->input('genre');
-       $movie->save();
-       return $movie;
+        $movie = Movie::find($id);
+        $movie->title = $request->input('title');
+        $movie->director = $request->input('director');
+        $movie->imageUrl = $request->input('imageUrl');
+        $movie->duration = $request->input('duration');
+        $movie->releaseDate = $request->input('releaseDate');
+        $movie->genre = $request->input('genre');
+
+        $movie->save();
+
+        return $movie;
 
     }
 
