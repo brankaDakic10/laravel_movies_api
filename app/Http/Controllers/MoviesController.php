@@ -5,6 +5,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Illuminate\Http\Request;
 // use App\Http\Requests\MoviesRequest;
 use App\Movie;
+use Validator;
 class MoviesController extends Controller
 {
     /**
@@ -15,6 +16,8 @@ class MoviesController extends Controller
     public function index(Request $request) {
         if ($request->query('title')) {
             return Movie::search($request->query('title'));
+        } elseif ($request->query('take') && $request->query('skip')) {
+            return Movie::skip($request->query('skip'))->take($request->query('take'))->get();
         } else {
             return Movie::all();
         }
@@ -38,14 +41,17 @@ class MoviesController extends Controller
      */
     public function store(Request $request)
     {  
-        $this->validate($request, [
-            'title' => 'required|unique:movies',
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|unique:movies,releaseDate',
             'director' => 'required',
-            'duration' => 'required|numeric|digits_between:1,500',
-            'releaseDate' => 'required|unique:movies',
+            'duration' => 'required|numeric|between:1,500',
+            'releaseDate' => 'required',
             'imageUrl' => 'URL'
         ]);
-
+        if ($validator->fails()) {
+            return new JsonResponse("Fail: 
+            check the entered parameters!");
+        }
         $movie = new Movie();
         $movie->title = $request->input('title');
         $movie->director = $request->input('director');
@@ -90,6 +96,18 @@ class MoviesController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // $validator = Validator::make($request->all(), [
+        //     'title' => 'required|unique:movies,releaseDate',
+        //     'director' => 'required',
+        //     'duration' => 'required|numeric|between:1,500',
+        //     'releaseDate' => 'required',
+        //     // 'imageUrl' => 'URL'
+        // ]);
+        // if ($validator->fails()) {
+        //     return new JsonResponse("Fail: check the entered parameters!");
+        // }
+
+
         $movie = Movie::find($id);
         $movie->title = $request->input('title');
         $movie->director = $request->input('director');
