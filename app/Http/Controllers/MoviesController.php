@@ -88,7 +88,16 @@ class MoviesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+       $movie=Movie::find($id);
+       $movie->title=$request->input('title');
+       $movie->director=$request->input('director');
+       $movie->imageUrl=$request->input('imageUrl');
+       $movie->duration=$request->input('duration');
+       $movie->releaseDate=$request->input('releaseDate');
+       $movie->genre=$request->input('genre');
+       $movie->save();
+       return $movie;
+
     }
 
     /**
