@@ -41,17 +41,19 @@ class MoviesController extends Controller
      */
     public function store(Request $request)
     {  
+        
         $validator = Validator::make($request->all(), [
-            'title' => 'required|unique:movies,releaseDate',
+            'title' => 'required|unique:movies',
             'director' => 'required',
             'duration' => 'required|numeric|between:1,500',
-            'releaseDate' => 'required',
-            'imageUrl' => 'URL'
+            'releaseDate' => 'required|unique:movies',
+            'imageUrl' => 'url'
         ]);
+
         if ($validator->fails()) {
-            return new JsonResponse("Fail: 
-            check the entered parameters!");
+            return new JsonResponse($validator->errors(), 406);
         }
+
         $movie = new Movie();
         $movie->title = $request->input('title');
         $movie->director = $request->input('director');
@@ -96,17 +98,17 @@ class MoviesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // $validator = Validator::make($request->all(), [
-        //     'title' => 'required|unique:movies,releaseDate',
-        //     'director' => 'required',
-        //     'duration' => 'required|numeric|between:1,500',
-        //     'releaseDate' => 'required',
-        //     // 'imageUrl' => 'URL'
-        // ]);
-        // if ($validator->fails()) {
-        //     return new JsonResponse("Fail: check the entered parameters!");
-        // }
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|unique:movies',
+            'director' => 'required',
+            'duration' => 'required|numeric|between:1,500',
+            'releaseDate' => 'required|unique:movies',
+            'imageUrl' => 'url'
+        ]);
 
+        if ($validator->fails()) {
+            return new JsonResponse($validator->errors(), 406);
+        }
 
         $movie = Movie::find($id);
         $movie->title = $request->input('title');
