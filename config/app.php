@@ -150,7 +150,8 @@ return [
         /*
          * Package Service Providers...
          */
-
+        // add
+       Barryvdh\Cors\ServiceProvider::class,
         /*
          * Application Service Providers...
          */
