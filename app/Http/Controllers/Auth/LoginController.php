@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
-
+// added
+use Illuminate\Http\Request;
+// added 
+use Tymon\JWTAuth\Exceptions\JWTException;
 class LoginController extends Controller
 {
     /*
@@ -36,4 +39,33 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
+
+      //added 
+      public function authenticate(Request $request)
+      { 
+       
+  
+           $credentials=$request->only(['email','password']);
+         
+    //   \Log::info(print_r($credentials,true));
+  
+  
+       
+  
+       try{
+           if(!$token= \JWTAuth::attempt($credentials)){
+               return response()->json(['error'=>'invalid_credentials'],401);
+  
+           }
+       }catch(JWTException $e){
+          return response()->json(['error'=>'could_not_create_token'],500);
+       }
+      //  ako prodje,dobijamo token
+       \Log::info($token);
+       return response()->json(compact('token'));
+      
+          }
+
+
+
 }

@@ -4,18 +4,20 @@ use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
-| API Routes
+| jwt Routes
 |--------------------------------------------------------------------------
 |
-| Here is where you can register API routes for your application. These
+| Here is where you can register jwt routes for your application. These
 | routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
+| is assigned the "jwt" middleware group. Enjoy building your jwt!
 |
 */
+///add new public endpoint
+Route::post('/login','Auth\LoginController@authenticate');
 
-Route::middleware('api')->get('/movies','MoviesController@index');
+Route::middleware('jwt')->get('/movies','MoviesController@index');
 
-Route::middleware('api')->get('/movies/{id}','MoviesController@show');
-Route::middleware('api')->post('/movies','MoviesController@store');
-Route::middleware('api')->put('/movies/{id}','MoviesController@update');
-Route::middleware('api')->delete('/movies/{id}','MoviesController@destroy');
+Route::middleware('jwt')->get('/movies/{id}','MoviesController@show');
+Route::middleware('jwt')->post('/movies','MoviesController@store');
+Route::middleware('jwt')->put('/movies/{id}','MoviesController@update');
+Route::middleware('jwt')->delete('/movies/{id}','MoviesController@destroy');
