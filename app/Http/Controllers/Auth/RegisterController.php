@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+// added
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -69,4 +71,22 @@ class RegisterController extends Controller
             'password' => Hash::make($data['password']),
         ]);
     }
+
+///////new
+    public function register(Request $request)
+    {
+        $errors = $this->validator($request->all())->errors();
+
+        if(count($errors))
+        {
+            return response(['errors' => $errors], 401);
+        }
+
+        $user = $this->create($request->all());
+
+        // $this->guard()->login($user);
+
+        return response(['user' => $user]);
+    }
+
 }
